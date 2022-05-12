@@ -27,6 +27,24 @@ app.get('/segunda', (req, res) => {
   allCalls()
 });
 
+app.get('/productos', (req, res) => {
+  const file = new Container("Archivo");
+  const allCalls = async () => {
+    const products = await file.getAll()
+    res.send(`[${products.map(obj => {return `{${obj['id']} ${obj['title']} ${obj['price']} ${obj['thumbnail']}}`} )}]`)
+  }
+  allCalls()
+});
+
+app.get('/productosRandom', (req, res) => {
+  const file = new Container("Archivo");
+  const allCalls = async () => {
+    const random = await file.getRandom()
+    res.send(`random: {${random?.id}, ${random?.title}, ${random?.price} ${random?.thumbnail}}`)
+  }
+  allCalls()
+});
+
 app.listen(8000, () => {
   console.log('Example app listening on port 8000!')
 });

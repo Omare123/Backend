@@ -33,6 +33,21 @@ class Container {
         return object;
 
     }
+    async getRandom() {
+        let object = {}
+        try {
+            const data = await fs.promises.readFile(this.name, 'utf8');
+            let products = data ? [...JSON.parse(data)] : [];
+            let randomIndex = Math.floor(Math.random() * products.length);
+            object = products[randomIndex];
+        }
+        catch (err) {
+            console.log(err)
+        }
+        
+        return object;
+
+    }
     async getAll() {
         const data = await fs.promises.readFile(this.name, 'utf8')
             return data ? [...JSON.parse(data)] : [];
