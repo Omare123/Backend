@@ -18,7 +18,7 @@ class Container {
             console.log(err)
         }
         
-        return id;
+        return object;
     }
     async getById(id) {
         let object = {}
@@ -60,6 +60,24 @@ class Container {
             fs.writeFile(this.name, JSON.stringify(newList), function (err) {
                 if (err) throw err;
             })
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+    async update(object) {
+        try {
+            const data = await fs.promises.readFile(this.name, 'utf8')
+            let list = data ? [...JSON.parse(data)] : [];
+            let objectToUpdate = list[object.id]
+            if(objectToUpdate){
+                objectToUpdate = 
+                fs.writeFile(this.name, JSON.stringify(newList), function (err) {
+                    if (err) throw err;
+                })
+            }
+            else
+                throw ('error: Producto no encontrado')
         }
         catch (err) {
             console.log(err)
