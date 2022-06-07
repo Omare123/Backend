@@ -3,16 +3,20 @@ const socket = io();
 fetch('/addProducts.hbs').then(response => response.text()).then(template =>
     {
         const tmplt = Handlebars.compile(template)
-        socket.on('product', (product) => {
-            const html = tmplt(product);
+        socket.on('products', (products) => {
+            const html = products.map((product) =>{
+                return tmplt(product)
+            }).join(' ')
             document.getElementById('renderElement').innerHTML = html;
         })
     })
 fetch('/addMessages.hbs').then(response => response.text()).then(template =>
         {
             const tmplt = Handlebars.compile(template)
-            socket.on('message', message => {
-                const html = tmplt(message);
+            socket.on('messages', messages => {
+                const html = messages.map((message) =>{
+                    return tmplt(message)
+                }).join(' ')
                 document.getElementById('messages').innerHTML = html;
             })
         })
@@ -34,18 +38,3 @@ const addProduct = () => {
     return false;
 }
 
-const createMessageView = ({author, text}) => {
-    return ` 
-    <div>
-        <strong>${author}</strong>
-        <em>${text}</em>
-    </div>
-    `;
-} 
-
-const addMessage = (messages) =>{
-    const allMessages = messages.map(message => createMessageView(message)).join(" ");
-    document.getElementById('messages').innerHTML = allMessages;
-}
-
-socket.on('messages', (messages) => addMessage(messages))

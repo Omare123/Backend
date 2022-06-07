@@ -1,7 +1,7 @@
 const express = require('express');
-const app = express();
 const {Server: HttpServer} = require('http');
 const {Server: SocketServer} = require('socket.io')
+const app = express();
 const Container = require('./src/models/Container') 
 const { engine } = require('express-handlebars');
 app.use(express.static('public'));
@@ -17,22 +17,28 @@ app.set('views', './public/views');
 const httpServer = new HttpServer(app);
 const socketServer = new SocketServer(httpServer);
 
+let messages = []
+let products = []
+
 socketServer.on('connection', (socket) => {
-    getAllMessages().then( messages => {
+    getAllMessages().then((response) => {
+            messages = response
             socket.emit('messages', messages);
             socket.on('new_message', (newMessage) => {
                 const file = new Container("Chat");
                 file.save(newMessage);
-                messages.push(newMessage);
+                messages.push(newMessage)
                 socketServer.sockets.emit('messages', messages)
-        })});
-    getAllProducts().then((products) => {
-        socket.emit('product', products);
+            })
+            });
+    getAllProducts().then((response) => {
+        products = response
+        socket.emit('products', products);
         socket.on('new_product', (newProduct) =>{
             const file = new Container("Archivo");
-            file.save(newMessage);
-            messages.push(newProduct);
-            socketServer.sockets.emit('messages', messages)
+            file.save(newProduct);
+            products.push(newProduct)
+            socketServer.sockets.emit('products', products)
         })
     });
 });
