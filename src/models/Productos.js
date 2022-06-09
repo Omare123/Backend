@@ -1,15 +1,16 @@
 const fs = require('fs')
-class Container {
+class Productos {
     constructor(name) {
         this.name = `${name}.txt`;
     }
+    
     async save(object) {
-        let id;
+        let newObject = {...object}
         try {
             const data = await fs.promises.readFile(this.name, 'utf8')
             let content = data ? [...JSON.parse(data)] : [];
-            object['id'] = id = content.length ? content[content.length - 1]['id'] + 1 : 0;
-            content = [...content, object]
+            newObject = {...newObject, id: content.length ? Number.parseInt(content[content.length - 1]['id']) + 1 : 0, timestamp: Date.now()};
+            content = [...content, newObject]
             fs.writeFile(this.name, JSON.stringify(content), function (err) {
                 if (err) throw err;
             })
@@ -18,7 +19,7 @@ class Container {
             console.log(err)
         }
         
-        return object;
+        return newObject;
     }
     async getById(id) {
         let object = {}
@@ -88,4 +89,4 @@ class Container {
     }
 
 }
-module.exports = Container
+module.exports = Productos;
