@@ -35,7 +35,7 @@ socketServer.on('connection', (socket) => {
         products = response
         socket.emit('products', products);
         socket.on('new_product', (newProduct) =>{
-            const file = new Container("Archivo");
+            const file = new Container("Product");
             file.save(newProduct);
             products.push(newProduct)
             socketServer.sockets.emit('products', products)
@@ -44,7 +44,7 @@ socketServer.on('connection', (socket) => {
 });
 
 const getAllProducts = async () => {
-    const file = new Container("Archivo");
+    const file = new Container("Product");
     products = await file.getAll();
     return products;
 }
