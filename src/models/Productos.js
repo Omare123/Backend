@@ -1,92 +1,92 @@
-const fs = require('fs')
-class Productos {
-    constructor(name) {
-        this.name = `${name}.txt`;
-    }
+// const fs = require('fs')
+// class Productos {
+//     constructor(name) {
+//         this.name = `${name}.txt`;
+//     }
     
-    async save(object) {
-        let newObject = {...object}
-        try {
-            const data = await fs.promises.readFile(this.name, 'utf8')
-            let content = data ? [...JSON.parse(data)] : [];
-            newObject = {...newObject, id: content.length ? Number.parseInt(content[content.length - 1]['id']) + 1 : 0, timestamp: Date.now()};
-            content = [...content, newObject]
-            fs.writeFile(this.name, JSON.stringify(content), function (err) {
-                if (err) throw err;
-            })
-        }
-        catch (err) {
-            console.log(err)
-        }
+//     async save(object) {
+//         let newObject = {...object}
+//         try {
+//             const data = await fs.promises.readFile(this.name, 'utf8')
+//             let content = data ? [...JSON.parse(data)] : [];
+//             newObject = {...newObject, id: content.length ? Number.parseInt(content[content.length - 1]['id']) + 1 : 0, timestamp: Date.now()};
+//             content = [...content, newObject]
+//             fs.writeFile(this.name, JSON.stringify(content), function (err) {
+//                 if (err) throw err;
+//             })
+//         }
+//         catch (err) {
+//             console.log(err)
+//         }
         
-        return newObject;
-    }
-    async getById(id) {
-        let object = {}
-        try {
-            const data = await fs.promises.readFile(this.name, 'utf8')
-            object = data ? [...JSON.parse(data)][id] : [];
-        }
-        catch (err) {
-            console.log(err)
-        }
+//         return newObject;
+//     }
+//     async getById(id) {
+//         let object = {}
+//         try {
+//             const data = await fs.promises.readFile(this.name, 'utf8')
+//             object = data ? [...JSON.parse(data)][id] : [];
+//         }
+//         catch (err) {
+//             console.log(err)
+//         }
         
-        return object;
+//         return object;
 
-    }
-    async getRandom() {
-        let object = {}
-        try {
-            const data = await fs.promises.readFile(this.name, 'utf8');
-            let products = data ? [...JSON.parse(data)] : [];
-            let randomIndex = Math.floor(Math.random() * products.length);
-            object = products[randomIndex];
-        }
-        catch (err) {
-            console.log(err)
-        }
+//     }
+//     async getRandom() {
+//         let object = {}
+//         try {
+//             const data = await fs.promises.readFile(this.name, 'utf8');
+//             let products = data ? [...JSON.parse(data)] : [];
+//             let randomIndex = Math.floor(Math.random() * products.length);
+//             object = products[randomIndex];
+//         }
+//         catch (err) {
+//             console.log(err)
+//         }
         
-        return object;
+//         return object;
 
-    }
-    async getAll() {
-        const data = await fs.promises.readFile(this.name, 'utf8')
-            return data ? [...JSON.parse(data)] : [];
-    }
-    async deleteById(id) {
-        try {
-            const data = await fs.promises.readFile(this.name, 'utf8')
-            let list = data ? [...JSON.parse(data)] : [];
-            let newList = list.filter(object => object.id !== id)
-            fs.writeFile(this.name, JSON.stringify(newList), function (err) {
-                if (err) throw err;
-            })
-        }
-        catch (err) {
-            console.log(err)
-        }
-    }
-    async update(object) {
-        try {
-            const data = await fs.promises.readFile(this.name, 'utf8')
-            let list = data ? [...JSON.parse(data)] : [];
-            let objectToUpdate = list[object.id]
-            if(objectToUpdate){
-                objectToUpdate = 
-                fs.writeFile(this.name, JSON.stringify(newList), function (err) {
-                    if (err) throw err;
-                })
-            }
-            else
-                throw ('error: Producto no encontrado')
-        }
-        catch (err) {
-            console.log(err)
-        }
-    }
-    async deleteAll() {
-        await fs.promises.writeFile(this.name, '')
-    }
+//     }
+//     async getAll() {
+//         const data = await fs.promises.readFile(this.name, 'utf8')
+//             return data ? [...JSON.parse(data)] : [];
+//     }
+//     async deleteById(id) {
+//         try {
+//             const data = await fs.promises.readFile(this.name, 'utf8')
+//             let list = data ? [...JSON.parse(data)] : [];
+//             let newList = list.filter(object => object.id !== id)
+//             fs.writeFile(this.name, JSON.stringify(newList), function (err) {
+//                 if (err) throw err;
+//             })
+//         }
+//         catch (err) {
+//             console.log(err)
+//         }
+//     }
+//     async update(object) {
+//         try {
+//             const data = await fs.promises.readFile(this.name, 'utf8')
+//             let list = data ? [...JSON.parse(data)] : [];
+//             let objectToUpdate = list[object.id]
+//             if(objectToUpdate){
+//                 objectToUpdate = 
+//                 fs.writeFile(this.name, JSON.stringify(newList), function (err) {
+//                     if (err) throw err;
+//                 })
+//             }
+//             else
+//                 throw ('error: Producto no encontrado')
+//         }
+//         catch (err) {
+//             console.log(err)
+//         }
+//     }
+//     async deleteAll() {
+//         await fs.promises.writeFile(this.name, '')
+//     }
 
-}
-module.exports = Productos;
+// }
+// module.exports = Productos;

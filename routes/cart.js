@@ -1,60 +1,36 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const Cart = require('../src/models/Cart')
+import CartContent  from '../src/daos/DaoCartSelector.js'
+const path = `../src/daos/${CartContent}`;
+const {default: CartService} = await import(path)
+const service = new CartService();
 
+router.get('/:id?', (req, res) => {
+    if(req.params.id === undefined)
+    service.getAll().then(reponse => {
+            res.json(reponse)
+        })
+    else
+    service.getById(req.params.id).then(reponse => {
+            res.json(reponse)
+        })
+  })
 
-router.post('/', (req, res) => {
-  const cart = new Cart()
-  res.json(cart.id)
-})
-
-router.delete('/:id', (req, res) => {
-  try {
-    const cart = new Cart(req.params.id);
-    cart.deleteById().then(reponse => {
-      res.json("Borrado")
+  router.post('/', (req, res) => {
+    service.save(req.body).then(reponse => {
+        res.json(reponse)
     })
-  }
-  catch (err) {
-    res.json("No existe ese carrito :(")
-  }
-})
+  })
 
-router.get('/:id/productos', (req, res) => {
-  try {
-    const cart = new Cart(req.params.id);
-    cart.getAll().then(reponse => {
+  router.put('/:id', (req, res) => {
+    service.update(req.body).then(reponse => {
       res.json(reponse)
     })
-  }
-  catch (err) {
-    res.json("No existe ese carrito :(")
-  }
-})
+  })
 
-router.post('/:id/productos', (req, res) => {
-  try {
-    const cart = new Cart(req.params.id);
-    cart.save(req.body).then(reponse => {
+  router.delete('/:id', (req, res) => {
+    service.deleteById(req.params.id).then(reponse => {
       res.json(reponse)
     })
-  }
-  catch (err) {
-    res.json("No existe ese carrito :(")
-  }
-})
-
-router.delete('/:id/productos/:id_prod', (req, res) => {
-  try {
-    const cart = new Cart(req.params.id);
-    cart.deleteProductById(req.params.id_prod).then(reponse => {
-      res.json("Borrado")
-    })
-  }
-  catch (err) {
-    res.json("No existe ese carrito :(")
-  }
-})
-
-
-module.exports = router;
+  })
+export default router;

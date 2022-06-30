@@ -1,35 +1,36 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const Productos  = require('../src/models/Productos') 
-
-const file = new Productos("Archivo")
+import ProductContent  from '../src/daos/DaoProductSelector.js'
+const path = `../src/daos/${ProductContent}`;
+const {default: ProductService} = await import(path)
+const service = new ProductService();
 
 router.get('/:id?', (req, res) => {
     if(req.params.id === undefined)
-        file.getAll().then(reponse => {
+    service.getAll().then(reponse => {
             res.json(reponse)
         })
     else
-        file.getById(req.params.id).then(reponse => {
+    service.getById(req.params.id).then(reponse => {
             res.json(reponse)
         })
   })
 
   router.post('/', (req, res) => {
-    file.save(req.body).then(reponse => {
+    service.save(req.body).then(reponse => {
         res.json(reponse)
     })
   })
 
   router.put('/:id', (req, res) => {
-    file.update(req.body).then(reponse => {
+    service.update(req.body).then(reponse => {
       res.json(reponse)
     })
   })
 
   router.delete('/:id', (req, res) => {
-    file.deleteById(req.params.id).then(reponse => {
+    service.deleteById(req.params.id).then(reponse => {
       res.json(reponse)
     })
   })
-module.exports = router;
+export default router;
