@@ -4,37 +4,61 @@ fetch('/addProducts.hbs').then(response => response.text()).then(template =>
     {
         const tmplt = Handlebars.compile(template)
         socket.on('products', (products) => {
+            
             const html = products.map((product) =>{
                 return tmplt(product)
             }).join(' ')
             document.getElementById('renderElement').innerHTML = html;
         })
+        socket.on('product', (product) => {
+            const html =tmplt(product)
+            document.getElementById('renderElement').innerHTML += html;
+        })
+
     })
 fetch('/addMessages.hbs').then(response => response.text()).then(template =>
         {
             const tmplt = Handlebars.compile(template)
-            socket.on('messages', messages => {
+            socket.on('messages', (messages) => {
                 const html = messages.map((message) =>{
                     return tmplt(message)
                 }).join(' ')
                 document.getElementById('messages').innerHTML = html;
             })
+            socket.on('message', (message) => {
+                const html = tmplt(message)
+                document.getElementById('messages').innerHTML += html;
+            })
         })
 
-const sendMessage = () => {
-    const author = document.getElementById("author").value;
-    const text = document.getElementById("text").value;
-    const message = {author, text};
-    socket.emit('new_message', message);
+const sendMessage = async () => {
+    const author = {"id": 1, "name": document.getElementById("author").value};
+    const text = {"id": 1, "comment": document.getElementById("text").value};
+    const message = {"post":{"id": 1, "author": author, "text":text}};
+    try{
+        const call = await axios.post('http://localhost:8080/api/chat', message)
+        socket.emit('new_message', message);
+    }
+    catch(err){
+        console.log("err", err)
+    }
+    
     return false;
 }
 
-const addProduct = () => {
+const addProduct = async () => {
     const name = document.getElementById("name").value;
     const price = document.getElementById("price").value;
     const image = document.getElementById("image").value;
     const product = {name, price, image};
-    socket.emit('new_product', product);
+    try{
+        const call = await axios.post('http://localhost:8080/api/productos', {...product})
+        socket.emit('new_product', product);
+    }
+    catch(err){
+        console.log(err)
+    }
+
     return false;
 }
 

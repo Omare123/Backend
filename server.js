@@ -1,9 +1,21 @@
-const express = require('express');
-const {Server: HttpServer} = require('http');
-const {Server: SocketServer} = require('socket.io')
+import { Server as HttpServer } from 'http';
+import { Server as SocketServer } from 'socket.io';
+import express from 'express';
+import products from './routes/products.js'
+import chat from './routes/chat.js'
+import { engine } from 'express-handlebars';
+import axios from 'axios';
+import allProducts from './routes/productsTest.js'
+import postSchema from './src/schemas/postSchema.js';
+
 const app = express();
-const Container = require('./src/models/Container') 
-const { engine } = require('express-handlebars');
+app.use(express.json())
+app.set('view engine', 'hbs');
+app.set('views', './public/views');
+app.use('/api/productos', products)
+app.use('/api/chat', chat)
+const httpServer = new HttpServer(app);
+const socketServer = new SocketServer(httpServer);
 app.use(express.static('public'));
 app.engine(
     'hbs',
@@ -11,50 +23,35 @@ app.engine(
         extname: '.hbs'
     })
 )
-app.set('view engine', 'hbs');
-app.set('views', './public/views');
 
-const httpServer = new HttpServer(app);
-const socketServer = new SocketServer(httpServer);
-
-let messages = []
-let products = []
 
 socketServer.on('connection', (socket) => {
     getAllMessages().then((response) => {
-            messages = response
-            socket.emit('messages', messages);
-            socket.on('new_message', (newMessage) => {
-                const file = new Container("Chat");
-                file.save(newMessage);
-                messages.push(newMessage)
-                socketServer.sockets.emit('messages', messages)
-            })
-            });
-    getAllProducts().then((response) => {
-        products = response
-        socket.emit('products', products);
-        socket.on('new_product', (newProduct) =>{
-            const file = new Container("Product");
-            file.save(newProduct);
-            products.push(newProduct)
-            socketServer.sockets.emit('products', products)
-        })
+        socket.emit('messages', response);
+
     });
+    socket.on('new_message', (newMessage) => {
+        socketServer.sockets.emit('message', newMessage)
+    })
+    getAllProducts().then((response) => {
+        socket.emit('products', response);
+
+    });
+    socket.on('new_product', (newProduct) => {
+        socketServer.sockets.emit('product', newProduct)
+    })
 });
 
 const getAllProducts = async () => {
-    const file = new Container("Product");
-    products = await file.getAll();
-    return products;
+    const callProducts = await allProducts
+    return callProducts;
 }
 
 const getAllMessages = async () => {
-    const file = new Container("Chat");
-    chat = await file.getAll();
-    return chat;
+    const allChat = (await axios.get('http://localhost:8080/api/chat')).data
+    console.log("allChat", allChat)
+    return allChat;
 }
-
-httpServer.listen(8080, ()=>{
-    console.log("Estoy en 8080")
-})
+httpServer.listen(8080, () => {
+    console.log('Listening on port 8080!')
+});
