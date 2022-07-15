@@ -10,7 +10,6 @@ router.get('/:id?', (req, res) => {
     service.getAll().then(response => {
       if (response.length > 0) {
         const denormalized = response.map(({entities, result}) => {
-          console.log({entities, result})
           return norm.denormalize(result[0], postSchema, entities)
         })
         res.json(denormalized)

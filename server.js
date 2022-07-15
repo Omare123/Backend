@@ -3,17 +3,33 @@ import { Server as SocketServer } from 'socket.io';
 import express from 'express';
 import products from './routes/products.js'
 import chat from './routes/chat.js'
+import users from './routes/users.js'
 import { engine } from 'express-handlebars';
 import axios from 'axios';
 import allProducts from './routes/productsTest.js'
-import postSchema from './src/schemas/postSchema.js';
+import dbConnections from "./config.js"
+import cookieParser from 'cookie-parser';
+import MongoStore from 'connect-mongo'
+import session from 'express-session';
 
 const app = express();
 app.use(express.json())
+app.use(cookieParser());
+const advancedOptions = {useNewUrlParser: true, useUnifiedTopology: true}
+app.use(session({
+  store: MongoStore.create({ mongoUrl: dbConnections.mongoDb, mongoOptions: advancedOptions }),
+  secret: 'ecommerce',
+  resave: true,
+  cookie: {
+    maxAge: 600000
+  },
+  saveUninitialized: true
+}));
 app.set('view engine', 'hbs');
 app.set('views', './public/views');
 app.use('/api/productos', products)
 app.use('/api/chat', chat)
+app.use('/api/users', users)
 const httpServer = new HttpServer(app);
 const socketServer = new SocketServer(httpServer);
 app.use(express.static('public'));
@@ -49,7 +65,6 @@ const getAllProducts = async () => {
 
 const getAllMessages = async () => {
     const allChat = (await axios.get('http://localhost:8080/api/chat')).data
-    console.log("allChat", allChat)
     return allChat;
 }
 httpServer.listen(8080, () => {

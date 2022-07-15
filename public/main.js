@@ -62,3 +62,36 @@ const addProduct = async () => {
     return false;
 }
 
+const loggedin = async () => {
+    try{
+        const call = await axios.get('http://localhost:8080/api/users/loggedin')
+        console.log(call)
+        if(call.data.active){
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            if(name){
+                fetch('/header.hbs').then(response => response.text()).then(template =>
+                    {
+                        const tmplt = Handlebars.compile(template)
+                        const html = tmplt({name: call.data.name})
+                        document.getElementById('welcome').innerHTML = html;
+                    })
+            }
+            else
+                window.location.href = `/index.html?name=${call.data.name}`
+        } 
+        else  
+            window.location.href = "/login.html"
+    }
+    catch(err){
+        console.log(err)
+    }
+
+    return false;
+}
+
+const logout = async () => {
+    window.location.href = "/logout.html"
+}
+$('#logout').on("click", () => logout())
+await loggedin();
