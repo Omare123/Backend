@@ -16,7 +16,7 @@ router.get('/:id?', (req, res) => {
       }
     })
   else
-    service.getById(req.params.id).then(response => {
+    service.getByparameter(req.params.id).then(response => {
       if (response) {
         const denormalized = norm.denormalize(response.result, postSchema, response.entities)
         res.json(denormalized)

@@ -4,14 +4,14 @@ import express from 'express';
 import products from './routes/products.js'
 import chat from './routes/chat.js'
 import users from './routes/users.js'
-import { engine } from 'express-handlebars';
+import engine from 'express-handlebars';
 import axios from 'axios';
 import allProducts from './routes/productsTest.js'
 import dbConnections from "./config.js"
 import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo'
 import session from 'express-session';
-
+import passport from './passport.js';
 const app = express();
 app.use(express.json())
 app.use(cookieParser());
@@ -25,6 +25,8 @@ app.use(session({
   },
   saveUninitialized: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.set('view engine', 'hbs');
 app.set('views', './public/views');
 app.use('/api/productos', products)

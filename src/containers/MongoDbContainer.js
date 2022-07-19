@@ -1,5 +1,5 @@
 import dbConnections from '../../config.js'
-import { MongoClient } from 'mongodb'
+import {MongoClient} from 'mongodb'
 const mongo = new MongoClient(dbConnections.mongoDb);
 
 
@@ -19,11 +19,13 @@ class MongoDbContainer {
 
         return object;
     }
-    async getById(id) {
+    async getByparameter(value, name = 'id') {
         const object = {}
         try {
             await mongo.connect();
-            object = await mongo.db("comercio").collection(this.table).find({id: id})
+            let filter = {}
+            filter[`${name}`] = value;
+            object = await mongo.db("comercio").collection(this.table).find(filter)
         }
         catch (err) {
             console.log(err)

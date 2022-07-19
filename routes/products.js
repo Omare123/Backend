@@ -9,7 +9,7 @@ router.get('/:id?', (req, res) => {
             res.json(reponse)
         })
     else
-    service.getById(req.params.id).then(reponse => {
+    service.getByparameter(req.params.id).then(reponse => {
             res.json(reponse)
         })
   })

@@ -1,7 +1,16 @@
-import express, { response } from 'express';
+import express from 'express';
 const router = express.Router();
+import passport from '../passport.js'
 
-router.post('/login', (req, res) => {
+const authentication = (req, res, next)=> {
+  if (req.session.name) return res.send({active: true, name: req.session.name});
+  next();
+}
+router.post('/register', passport.authenticate('registration'), (req, res) => {
+  res.send({active: true, name:req.body.name });
+})
+
+router.post('/login', passport.authenticate('athentication'),  (req, res) => {
   if (!req.session.name){
     req.session.name = req.body.name;
   }
@@ -18,14 +27,11 @@ router.get('/logout', (req, res) => {
     res.send(response)
   }
   else{
-    throw new Error("Qué haces?")
+    throw new Error("No existe ese usuario")
   }
 });
 
-router.get('/loggedin', (req, res) => {
-  if (req.session.name) {
-    return res.send({active: true, name: req.session.name});
-  }
+router.get('/loggedin', authentication, (req, res) => {
   return res.send({active: false});
 });
 
