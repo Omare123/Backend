@@ -1,10 +1,10 @@
 const register = async () => {
     try {
         const name = document.getElementById("username").value;
-        const pass = document.getElementById("pasword").value
-        const call = await axios.post('http://localhost:8080/api/users/register', { name: name, password: pass })
+        const pass = document.getElementById("password").value
+        const call = await axios.post('http://localhost:8080/api/users/register', { username: name, password: pass })
         if (call.data.active)
-            window.location.href = `/index.html?name=${call.data.name}`
+            window.location.href = `/login.html`
         else
             window.location.reload()
     }

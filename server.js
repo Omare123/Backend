@@ -4,7 +4,7 @@ import express from 'express';
 import products from './routes/products.js'
 import chat from './routes/chat.js'
 import users from './routes/users.js'
-import engine from 'express-handlebars';
+import {engine} from 'express-handlebars';
 import axios from 'axios';
 import allProducts from './routes/productsTest.js'
 import dbConnections from "./config.js"
@@ -32,6 +32,10 @@ app.set('views', './public/views');
 app.use('/api/productos', products)
 app.use('/api/chat', chat)
 app.use('/api/users', users)
+app.use((error, req, res, next) => {
+    if(error)
+        res.status(500).send(error.message);
+})
 const httpServer = new HttpServer(app);
 const socketServer = new SocketServer(httpServer);
 app.use(express.static('public'));

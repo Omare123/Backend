@@ -6,29 +6,27 @@ const authentication = (req, res, next)=> {
   if (req.session.name) return res.send({active: true, name: req.session.name});
   next();
 }
+
 router.post('/register', passport.authenticate('registration'), (req, res) => {
+  console.log(req.body)
   res.send({active: true, name:req.body.name });
 })
 
-router.post('/login', passport.authenticate('athentication'),  (req, res) => {
+router.post('/login', passport.authenticate('login'),  (req, res) => {
+  console.log(req.body)
   if (!req.session.name){
-    req.session.name = req.body.name;
+    req.session.name = req.body.username;
   }
-  res.send({active: true, name:req.body.name });
+  res.send({active: true, name:req.body.username });
 })
 
 router.get('/logout', (req, res) => {
   const response = req.session.name;
   if(req.session.name){
-    req.session.destroy((err) => {
-      console.log(err);
-      res.redirect('/login.html');
-    });
+    req.session.destroy();
     res.send(response)
   }
-  else{
-    throw new Error("No existe ese usuario")
-  }
+  throw new Error("Hubo un error")
 });
 
 router.get('/loggedin', authentication, (req, res) => {

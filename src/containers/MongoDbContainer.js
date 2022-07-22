@@ -20,18 +20,18 @@ class MongoDbContainer {
         return object;
     }
     async getByparameter(value, name = 'id') {
-        const object = {}
+        let object = {}
         try {
             await mongo.connect();
             let filter = {}
             filter[`${name}`] = value;
-            object = await mongo.db("comercio").collection(this.table).find(filter)
+            object = await mongo.db("comercio").collection(this.table).find(filter).toArray()
         }
         catch (err) {
             console.log(err)
         }
 
-        return object;
+        return object[0];
 
     }
     async getAll() {
