@@ -4,6 +4,8 @@ import express from 'express';
 import products from './routes/products.js'
 import chat from './routes/chat.js'
 import users from './routes/users.js'
+import info from './routes/info.js'
+import random from './routes/random.js'
 import {engine} from 'express-handlebars';
 import axios from 'axios';
 import allProducts from './routes/productsTest.js'
@@ -12,6 +14,8 @@ import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo'
 import session from 'express-session';
 import passport from './passport.js';
+import parseArgs from 'minimist';
+const {port} = parseArgs(process.argv.slice(2), {alias:{ 'p': 'port' }, default: { port: 8080 }})
 const app = express();
 app.use(express.json())
 app.use(cookieParser());
@@ -32,6 +36,8 @@ app.set('views', './public/views');
 app.use('/api/productos', products)
 app.use('/api/chat', chat)
 app.use('/api/users', users)
+app.use('/api/info', info)
+app.use('/api/randoms', random)
 app.use((error, req, res, next) => {
     if(error)
         res.status(500).send(error.message);
@@ -73,6 +79,6 @@ const getAllMessages = async () => {
     const allChat = (await axios.get('http://localhost:8080/api/chat')).data
     return allChat;
 }
-httpServer.listen(8080, () => {
-    console.log('Listening on port 8080!')
+httpServer.listen(port, () => {
+    console.log(`Listening on port ${port}!`)
 });
