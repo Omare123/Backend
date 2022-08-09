@@ -2,7 +2,7 @@ const register = async () => {
     try {
         const name = document.getElementById("username").value;
         const pass = document.getElementById("password").value
-        const call = await axios.post('http://localhost:8080/api/users/register', { username: name, password: pass })
+        const call = await axios.post('http://localhost:80/api/users/register', { username: name, password: pass })
         if (call.data.active)
             window.location.href = `/login.html`
         else
@@ -21,7 +21,7 @@ const register = async () => {
 
 const loggedin = async () => {
     try {
-        const call = await axios.get('http://localhost:8080/api/users/loggedin')
+        const call = await axios.get('http://localhost:80/api/users/loggedin')
         if (call.data.active)
             window.location.href = `/index.html?name=${call.data.name}`
     }

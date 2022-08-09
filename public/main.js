@@ -36,7 +36,7 @@ const sendMessage = async () => {
     const text = {"id": 1, "comment": document.getElementById("text").value};
     const message = {"post":{"id": 1, "author": author, "text":text}};
     try{
-        const call = await axios.post('http://localhost:8080/api/chat', message)
+        const call = await axios.post('http://localhost:80/api/chat', message)
         socket.emit('new_message', message);
     }
     catch(err){
@@ -52,7 +52,7 @@ const addProduct = async () => {
     const image = document.getElementById("image").value;
     const product = {name, price, image};
     try{
-        const call = await axios.post('http://localhost:8080/api/productos', {...product})
+        const call = await axios.post('http://localhost:80/api/productos', {...product})
         socket.emit('new_product', product);
     }
     catch(err){
@@ -64,7 +64,7 @@ const addProduct = async () => {
 
 const loggedin = async () => {
     try{
-        const call = await axios.get('http://localhost:8080/api/users/loggedin')
+        const call = await axios.get('http://localhost:80/api/users/loggedin')
         console.log(call)
         if(call.data.active){
             const urlParams = new URLSearchParams(window.location.search);

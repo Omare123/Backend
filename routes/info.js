@@ -1,4 +1,5 @@
 import express from 'express';
+import os from 'os';
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -8,7 +9,8 @@ router.get('/', (req, res) => {
     ver: process.version,
     memory: process.memoryUsage().arrayBuffers,
     direc: process.report.directory,
-    cwd: process.cwd()
+    cwd: process.cwd(),
+    numPro: os.cpus().length
   })
 })
 export default router;
