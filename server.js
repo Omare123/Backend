@@ -17,16 +17,32 @@ import passport from './passport.js';
 import parseArgs from 'minimist';
 import cluster from 'cluster';
 import os from 'os'
+import compression from 'compression';
+import pino from 'pino';
 
-const { port, mode } = parseArgs(process.argv, { alias: { 'p': 'port' }, default: { mode: 'fork' } });
-console.log(mode)
+const { mode } = parseArgs(process.argv, { alias: { 'p': 'port' }, default: { mode: 'fork' } });
 const processId = process.pid;
 const numeroCpus = os.cpus().length;
 
 function startApp() {
+    const { port } = parseArgs(process.argv, { alias: { 'p': 'port' }, default: { mode: 'fork' } });
+    const consoleLogger = pino();
+    const warnLogger = pino({level: 'warn'}, pino.destination('./warn.log'))
+    const errorLogger = pino({level: 'error'}, pino.destination('./error.log'))
     const app = express();
-    app.use(express.json())
+    const logWarn = (req, res, next) => {
+        warnLogger.warn(`${req.path} no es una ruta esperada`);
+        next();
+    }
+    const logError = (err, req, res, next) => {
+        if (err){
+            errorLogger.error(err.message);
+            res.send(err.message);
+        }
+    }
+    app.use(express.json());
     app.use(cookieParser());
+    app.use(compression());
     const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true }
     app.use(session({
         store: MongoStore.create({ mongoUrl: dbConnections.mongoDb, mongoOptions: advancedOptions }),
@@ -39,6 +55,10 @@ function startApp() {
     }));
     app.use(passport.initialize());
     app.use(passport.session());
+    app.use((req, res, next)=> {
+        consoleLogger.info(`${req.path}`)
+        next();
+    })
     app.set('view engine', 'hbs');
     app.set('views', './public/views');
     app.use('/api/productos', products)
@@ -46,10 +66,9 @@ function startApp() {
     app.use('/api/users', users)
     app.use('/api/info', info)
     app.use('/api/randoms', random)
-    app.use((error, req, res, next) => {
-        if (error)
-            res.status(500).send(error.message);
-    })
+    app.use(logWarn);
+    app.use(logError);
+    
     const httpServer = new HttpServer(app);
     const socketServer = new SocketServer(httpServer);
     app.use(express.static('public'));
@@ -87,8 +106,8 @@ function startApp() {
         const allChat = (await axios.get('http://localhost:80/api/chat')).data
         return allChat;
     }
-    httpServer.listen(port, () => {
-        console.log(`Listening on port ${port}! and process Id: ${processId}`)
+    httpServer.listen(8080, () => {
+        console.log(`Listening on port ${8080}! and process Id: ${processId}`)
     });
 }
 if (mode === 'fork') {
