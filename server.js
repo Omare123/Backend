@@ -61,10 +61,10 @@ function startApp() {
 
 
     socketServer.on('connection', (socket) => {
-        getAllMessages().then((response) => {
-            socket.emit('messages', response);
+        // getAllMessages().then((response) => {
+        //     socket.emit('messages', response);
 
-        });
+        // });
         socket.on('new_message', (newMessage) => {
             socketServer.sockets.emit('message', newMessage)
         })
