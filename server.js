@@ -14,12 +14,11 @@ import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo'
 import session from 'express-session';
 import passport from './passport.js';
-import parseArgs from 'minimist';
 import cluster from 'cluster';
 import os from 'os'
 
-const { port, mode } = parseArgs(process.argv, { alias: { 'p': 'port' }, default: { mode: 'fork' } });
-console.log(mode)
+const port = parseInt(process.env.PORT) || 80;
+const mode = process.env.MODE
 const processId = process.pid;
 const numeroCpus = os.cpus().length;
 
