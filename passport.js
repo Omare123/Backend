@@ -5,18 +5,24 @@ import UserDaoMongodb from './src/daos/UserDaoMongodb.js'
 const userService = new UserDaoMongodb()
 
 
-passport.use('registration', new Strategy(async (username, password, callback) => {
-    const user = await userService.getByparameter(username, 'username');
-    if (user) return callback(new Error('Ya existe un usuario con ese nombre'));
-    const passwordHasheado = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-    const usuarioCreado = { username, password: passwordHasheado };
-    await userService.save(usuarioCreado);
-    callback(null, usuarioCreado);
+passport.use('registration', new Strategy({passReqToCallback: true}, async (req, username, password, callback) => {
+    try{
+        const user = await userService.getByparameter(username, 'username');
+        if (user) return callback('Ya existe un usuario con ese nombre');
+        const hasedPass = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+        const createdUser = { ...req.body, password: hasedPass};
+        await userService.save(createdUser);
+        callback(null, createdUser);
+    }
+    catch(err) {
+        console.log(err)
+    }
+    
 }));
 
 passport.use('login', new Strategy(async (username, password, callback) => {
     const user = await userService.getByparameter(username, 'username');
-    if (!user || !bcrypt.compareSync(password, user.password)) return callback(new Error('Usuario no existente o password incorrecto'));
+    if (!user || !bcrypt.compareSync(password, user.password)) return callback('Usuario no existente o password incorrecto');
     callback(null, user);
 }));
 

@@ -1,12 +1,20 @@
+const baseURL = window.location.origin;
 const register = async () => {
     try {
-        const name = document.getElementById("username").value;
-        const pass = document.getElementById("password").value
-        const call = await axios.post('http://localhost:80/api/users/register', { username: name, password: pass })
-        if (call.data.active)
-            window.location.href = `/login.html`
-        else
-            window.location.reload()
+        const user = {
+            username: document.getElementById("username").value,
+            password: document.getElementById("password").value,
+            name: document.getElementById("name").value,
+            direction: document.getElementById("direction").value,
+            age: document.getElementById("age").value,
+            phone: document.getElementById("phone").value,
+            image: document.getElementById("img").value
+        }
+        const call = await axios.post(`${baseURL}/api/users/register`, {...user})
+        // if (call.data.active)
+        //     window.location.href = `/login.html`
+        // else
+        //     window.location.reload()
     }
     catch (err) {
         let error = document.createElement('span');
@@ -21,9 +29,9 @@ const register = async () => {
 
 const loggedin = async () => {
     try {
-        const call = await axios.get('http://localhost:80/api/users/loggedin')
+        const call = await axios.get(`${baseURL}/api/users/loggedin`)
         if (call.data.active)
-            window.location.href = `/index.html?name=${call.data.name}`
+            window.location.href = `/index.html`
     }
     catch (err) {
         console.log(err)
@@ -31,5 +39,5 @@ const loggedin = async () => {
 
     return false;
 }
-$( "#target" ).on("click", () => register());
+$("#target").on("click", () => register());
 await loggedin();

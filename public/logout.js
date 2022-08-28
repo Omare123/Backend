@@ -1,6 +1,7 @@
+const baseURL = window.location.origin;
 const logout = async () => {
     try{
-        const call = await axios.get('http://localhost:80/api/users/logout')
+        let call = await axios.get(`${baseURL}/api/users/logout`)
         const response = await fetch('./logout.hbs');
         const template = await response.text();
         const tmplt = Handlebars.compile(template)

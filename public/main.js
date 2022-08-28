@@ -1,5 +1,6 @@
 const socket = io();
-
+const baseURL = window.location.origin;
+let user = null;
 fetch('/addProducts.hbs').then(response => response.text()).then(template =>
     {
         const tmplt = Handlebars.compile(template)
@@ -31,12 +32,12 @@ fetch('/addMessages.hbs').then(response => response.text()).then(template =>
             })
         })
 
-const sendMessage = async () => {
-    const author = {"id": 1, "name": document.getElementById("author").value};
+const sendMessage = async (e) => {
+    const author = {"id": 1, "name": user};
     const text = {"id": 1, "comment": document.getElementById("text").value};
     const message = {"post":{"id": 1, "author": author, "text":text}};
     try{
-        const call = await axios.post('http://localhost:80/api/chat', message)
+        const call = await axios.post(`${baseURL}api/chat`, message)
         socket.emit('new_message', message);
     }
     catch(err){
@@ -52,7 +53,7 @@ const addProduct = async () => {
     const image = document.getElementById("image").value;
     const product = {name, price, image};
     try{
-        const call = await axios.post('http://localhost:80/api/productos', {...product})
+        const call = await axios.post(`${baseURL}/api/productos`, {...product})
         socket.emit('new_product', product);
     }
     catch(err){
@@ -64,12 +65,10 @@ const addProduct = async () => {
 
 const loggedin = async () => {
     try{
-        const call = await axios.get('http://localhost:80/api/users/loggedin')
-        console.log(call)
+        const call = await axios.get(`${baseURL}/api/users/loggedin`)
         if(call.data.active){
-            const urlParams = new URLSearchParams(window.location.search);
-            const name = urlParams.get('name');
-            if(name){
+            user = sessionStorage.getItem("name");
+            if(user){
                 fetch('/header.hbs').then(response => response.text()).then(template =>
                     {
                         const tmplt = Handlebars.compile(template)
@@ -77,8 +76,6 @@ const loggedin = async () => {
                         document.getElementById('welcome').innerHTML = html;
                     })
             }
-            else
-                window.location.href = `/index.html?name=${call.data.name}`
         } 
         else  
             window.location.href = "/login.html"
@@ -91,7 +88,8 @@ const loggedin = async () => {
 }
 
 const logout = async () => {
-    window.location.href = "/logout.html"
+    await axios.get(`${baseURL}/api/users/logout`)
+    window.location.href = "/login.html"
 }
 $('#logout').on("click", () => logout())
 await loggedin();

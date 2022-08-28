@@ -14,7 +14,7 @@ class MongoDbContainer {
             await mongo.db("comercio").collection(this.table).insertOne(object)
         }
         catch (err) {
-            console.log(err)
+            throw new Error("Error saving in database")
         }
 
         return object;
@@ -28,7 +28,7 @@ class MongoDbContainer {
             object = await mongo.db("comercio").collection(this.table).find(filter).toArray()
         }
         catch (err) {
-            console.log(err)
+            throw new Error("Error getting the data")
         }
 
         return object[0];
@@ -41,8 +41,7 @@ class MongoDbContainer {
             data = await mongo.db("comercio").collection(this.table).find({}).toArray()
         }
         catch (err) {
-            console.log("ERROR")
-            // console.log(err)
+            throw new Error("Error getting the data")
         }
 
         return data;
@@ -53,7 +52,7 @@ class MongoDbContainer {
             await mongo.db("comercio").collection(this.table).deleteOne({_id: id})
         }
         catch (err) {
-            console.log(err)
+            throw new Error("Error deleting the data")
         }
     }
     async update(object) {
@@ -62,7 +61,7 @@ class MongoDbContainer {
             data = await mongo.db("comercio").collection(this.table).updateOne({_id: object.id}, {...object})
         }
         catch (err) {
-            console.log(err)
+            throw new Error("Error updating the data")
         }
     }
 }
