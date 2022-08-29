@@ -32,8 +32,8 @@ const loggedin = async () => {
         else  
             window.location.href = "/login.html"
     }
-    catch(err){
-        console.log(err)
+    catch(error){
+        console.log(error)
     }
 
     return false;
