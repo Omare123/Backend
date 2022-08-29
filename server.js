@@ -33,10 +33,9 @@ function startApp() {
     const app = express();
     app.use(morgan('dev', { stream: accessLogStream }))
     app.use(express.json());
-    // app.use(express.urlencoded({ extended: true }));
+    app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
     app.use(compression());
-    
     const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true }
     app.use(session({
         store: MongoStore.create({ mongoUrl: dbConnections.mongoDb, mongoOptions: advancedOptions }),
@@ -47,11 +46,12 @@ function startApp() {
         },
         saveUninitialized: true
     }));
+    app.use('/uploads', express.static('uploads'));
     app.use(passport.initialize());
     app.use(passport.session());
     app.set('view engine', 'hbs');
     app.set('views', './public/views');
-    app.use('/api/productos', products)
+    app.use('/api/products', products)
     app.use('/api/chat', chat)
     app.use('/api/users', users)
     
@@ -66,17 +66,17 @@ function startApp() {
     )
 
 
-    socketServer.on('connection', (socket) => {
-        getAllProducts().then((response) => {
-            socket.emit('products', response);
-        });
-        socket.on('new_product', (newProduct) => {
-            socketServer.sockets.emit('product', newProduct)
-        })
-        socket.on('add_product', (addedProduct) => {
-            socketServer.sockets.emit('add_product', addedProduct)
-        })
-    });
+    // socketServer.on('connection', (socket) => {
+    //     getAllProducts().then((response) => {
+    //         socket.emit('products', response);
+    //     });
+    //     socket.on('new_product', (newProduct) => {
+    //         socketServer.sockets.emit('product', newProduct)
+    //     })
+    //     socket.on('add_product', (addedProduct) => {
+    //         socketServer.sockets.emit('add_product', addedProduct)
+    //     })
+    // });
 
     const getAllProducts = async () => {
         return await allProducts

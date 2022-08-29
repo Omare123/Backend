@@ -1,31 +1,33 @@
 import express from 'express';
 const router = express.Router();
 import passport from '../passport.js';
+import multer from 'multer';
+import path from "path"
+import { inicialMailer } from "../helpers/mailer.js"
 
-
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "./tempImages")
-//   },
-//   filename: function (req, file, cb) {
-//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-//     cb(null, file.fieldname + '-' + uniqueSuffix)
-//   }
-// })
-// const upload = multer({
-//   storage: storage 
-//   });
+const storage = multer.diskStorage({
+  destination: "static/uploads",
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+  }
+})
+const upload = multer({
+  storage: storage
+})
   
 const authentication = (req, res, next)=> {
   if (req.session.name) return res.send({active: true, name: req.session.name});
   next();
 }
 
-router.post('/register', passport.authenticate('registration'), (req, res) => {
+router.post('/register', upload.single("uploaded_file"), passport.authenticate('registration'), (req, res, next) => {
   try{
-  res.send({active: true, name:req.body.username });
+    inicialMailer(req.body)
+    res.send({active: true, name:req.body.username });
   }catch(err){
     console.log(err);
+    next();
   }
 })
 

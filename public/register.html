@@ -8,18 +8,17 @@
     <script type="module" src="register.js"></script>
   </head>
   <body>
-    <form class="d-flex flex-column col-4" method="post" action="/api/users/register" enctype="multipart/form-data" id="myForm">
+    <form class="d-flex flex-column col-4" onsubmit="return false" enctype="multipart/form-data">
         <h1>Registro de usuario</h1>
         <div id="error"></div>
-        <input placeholder="Email" type="text" id="username"/>
-        <input placeholder="Contraseña" type="password" id="password"/>
-        <input placeholder="Nombre" type="text" id="name">
-        <input placeholder="Dirección" type="text" id="direction">
-        <input placeholder="Edad" type="number" id="age">
-        <input placeholder="Teléfono" type="number" id="phone">
-        <input placeholder="Foto de perfil" type="file" id="img" name="uploaded_file">
-        <input type="submit" value="submit">
-        <!-- <button id="target">Enviar</button> -->
+        <input  placeholder="Email" type="email" id="username"></input>
+        <input  placeholder="Contraseña" type="password"id="password"></input>
+        <input placeholder="Nombre" type="text"id="name"></input>
+        <input placeholder="Dirección" type="text"id="direction"></input>
+        <input placeholder="Edad" type="number"id="age"></input>
+        <input placeholder="Teléfono" type="number"id="phone"></input>
+        <input placeholder="Foto de perfil" type="file" name="uploaded_file" id="file"></input>
+        <button id="target">Enviar</button>
     </form>
     
     <!-- <a href="/products">Ver Productos</a> -->
