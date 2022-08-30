@@ -3,6 +3,7 @@ import { Server as SocketServer } from 'socket.io';
 import express from 'express';
 import products from './routes/products.js'
 import chat from './routes/chat.js'
+import cart from './routes/cart.js'
 import users from './routes/users.js'
 import { engine } from 'express-handlebars';
 import allProducts from './routes/productsTest.js'
@@ -46,13 +47,13 @@ function startApp() {
         },
         saveUninitialized: true
     }));
-    app.use('/uploads', express.static('uploads'));
     app.use(passport.initialize());
     app.use(passport.session());
     app.set('view engine', 'hbs');
-    app.set('views', './public/views');
+    app.set('views', './public');
     app.use('/api/products', products)
     app.use('/api/chat', chat)
+    app.use('/api/cart', cart)
     app.use('/api/users', users)
     
     const httpServer = new HttpServer(app);

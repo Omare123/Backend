@@ -1,6 +1,6 @@
 import MongoDbContainer from "../containers/MongoDbContainer.js";
 
-class ChatDaoMongodb extends MongoDbContainer {
+class CartDaoMongodb extends MongoDbContainer {
     constructor() {
         super('Cart')
     }
@@ -8,4 +8,4 @@ class ChatDaoMongodb extends MongoDbContainer {
 
     }
 }
-export default ChatDaoMongodb;
+export default CartDaoMongodb;

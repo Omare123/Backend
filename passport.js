@@ -10,7 +10,7 @@ passport.use('registration', new Strategy({passReqToCallback: true}, async (req,
         const user = await userService.getByparameter(username, 'username');
         if (user) return callback('Ya existe un usuario con ese nombre');
         const hasedPass = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-        const createdUser = { ...req.body, password: hasedPass};
+        const createdUser = { ...req.body, password: hasedPass, photo: req.file.filename};
         await userService.save(createdUser);
         callback(null, createdUser);
     }

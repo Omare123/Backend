@@ -1,13 +1,13 @@
 import dbConnections from '../../config.js'
-import {MongoClient} from 'mongodb'
+import { MongoClient, ObjectId } from 'mongodb'
 const mongo = new MongoClient(dbConnections.mongoDb);
 
 
 class MongoDbContainer {
-    constructor(table){
+    constructor(table) {
         this.table = table;
     }
-    
+
     async save(object) {
         try {
             await mongo.connect();
@@ -24,7 +24,7 @@ class MongoDbContainer {
         try {
             await mongo.connect();
             let filter = {}
-            filter[`${name}`] = value;
+            filter[`${name}`] = name !== "_id" ? value : ObjectId(value);
             object = await mongo.db("comercio").collection(this.table).find(filter).toArray()
         }
         catch (err) {
@@ -49,7 +49,7 @@ class MongoDbContainer {
     async deleteById(id) {
         try {
             await mongo.connect();
-            await mongo.db("comercio").collection(this.table).deleteOne({_id: id})
+            await mongo.db("comercio").collection(this.table).deleteOne({ _id: id })
         }
         catch (err) {
             throw new Error("Error deleting the data")
@@ -58,7 +58,7 @@ class MongoDbContainer {
     async update(object) {
         try {
             await mongo.connect();
-            data = await mongo.db("comercio").collection(this.table).updateOne({_id: object.id}, {...object})
+            return await mongo.db("comercio").collection(this.table).updateOne({ "_id": ObjectId(object._id) }, { "$set": { ...object } })
         }
         catch (err) {
             throw new Error("Error updating the data")
