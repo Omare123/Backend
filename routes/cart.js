@@ -37,7 +37,7 @@ router.post('/add', async (req, res) => {
       }
       cart.items.push({...addedProduct})
     }
-    res.json(await cartService.update(cart))
+    res.json(await cartService.update(cart));
   }
   catch (err) {
     console.log(err)
