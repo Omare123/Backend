@@ -1,12 +1,10 @@
 import { Server as HttpServer } from 'http';
-import { Server as SocketServer } from 'socket.io';
 import express from 'express';
 import products from './routes/products.js'
 import chat from './routes/chat.js'
 import cart from './routes/cart.js'
 import users from './routes/users.js'
 import { engine } from 'express-handlebars';
-import allProducts from './routes/productsTest.js'
 import dbConnections from "./config.js"
 import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo'
@@ -57,7 +55,6 @@ function startApp() {
     app.use('/api/users', users)
     
     const httpServer = new HttpServer(app);
-    const socketServer = new SocketServer(httpServer);
     app.use(express.static('public'));
     app.engine(
         'hbs',
@@ -66,22 +63,6 @@ function startApp() {
         })
     )
 
-
-    // socketServer.on('connection', (socket) => {
-    //     getAllProducts().then((response) => {
-    //         socket.emit('products', response);
-    //     });
-    //     socket.on('new_product', (newProduct) => {
-    //         socketServer.sockets.emit('product', newProduct)
-    //     })
-    //     socket.on('add_product', (addedProduct) => {
-    //         socketServer.sockets.emit('add_product', addedProduct)
-    //     })
-    // });
-
-    const getAllProducts = async () => {
-        return await allProducts
-    }
     httpServer.listen(port, () => {
         console.log(`Listening on port ${port}! and process Id: ${processId}`)
     });

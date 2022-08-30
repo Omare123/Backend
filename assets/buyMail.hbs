@@ -1,0 +1,13 @@
+<div>
+    <h1>¡Hola {{username}}! tu pedido está en camino</h1>
+    <span>Predido:</span><br/>
+    <div>
+        {{#each items}}
+        <div>
+            <p>{{product.name}}</p>
+            <p>{{count}}</p>
+            <p>{{product.price}} c/u</p>
+        </div>
+        {{/each}}
+    </div>
+</div>
