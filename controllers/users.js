@@ -1,10 +1,10 @@
 import express from 'express';
 const router = express.Router();
 import passport from '../passport.js';
-import UserService from '../src/daos/UserDaoMongodb.js'
+import UserService from '../services/usersService.js';
 import { inicialMailer } from "../helpers/mailer.js"
 import { upload } from '../helpers/uploader.js';
-const service = new UserService()
+const userService = new UserService()
 
 const authentication = (req, res, next) => {
   if (req.session.name) return res.send({ active: true, name: req.session.name });
@@ -13,11 +13,9 @@ const authentication = (req, res, next) => {
 
 router.post('/register', upload.single("uploaded_file"), passport.authenticate('registration'), (req, res, next) => {
   try {
-    inicialMailer(req.body)
     res.send({ active: true, name: req.body.username });
   } catch (err) {
     console.log(err);
-    next();
   }
 })
 
@@ -40,14 +38,8 @@ router.get('/loggedin', authentication, (req, res) => {
 
 router.get('/:username?', (req, res) => {
   if (req.query.username === undefined)
-    service.getAll().then(reponse => {
-      res.json(reponse)
-    })
+    res.json(await userService.getAll())
   else
-    service.getByparameter(req.query.username, "username").then(reponse => {
-      let user = {...reponse};
-      delete user.password;
-      res.json(user);
-    })
+    res.json(await userService.getUser(req.query.username))
 })
 export default router;
