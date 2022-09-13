@@ -1,10 +1,10 @@
 import express from 'express';
 const router = express.Router();
-import passport from '../passport.js';
-import UserService from '../services/usersService.js';
-import { inicialMailer } from "../helpers/mailer.js"
+import passport from '../../passport.js';
 import { upload } from '../helpers/uploader.js';
-const userService = new UserService()
+import dependencies from '../../dependencies.js'
+const container = dependencies();
+const userController = container.resolve('userController')
 
 const authentication = (req, res, next) => {
   if (req.session.name) return res.send({ active: true, name: req.session.name });
@@ -37,9 +37,6 @@ router.get('/loggedin', authentication, (req, res) => {
 });
 
 router.get('/:username?', (req, res) => {
-  if (req.query.username === undefined)
-    res.json(await userService.getAll())
-  else
-    res.json(await userService.getUser(req.query.username))
+    res.json(userController.getUser(req.query.username))
 })
 export default router;

@@ -1,23 +1,20 @@
 import express from 'express';
 const router = express.Router();
-import CartService from '../services/cartService.js';
-import { mailer } from '../helpers/mailer.js';
-import { whatsapper } from '../helpers/whatsapper.js';
-
-const cartService = new CartService();
-
+import dependencies from '../../dependencies.js'
+const container = dependencies();
+const cartController = container.resolve('cartController');
 
 router.get('/', async (req, res) => {
   if (!req.session.name)
     res.redirect("/login.html")
-  res.json(await cartService.getCart(req.session.name))
+  res.json(await cartController.getCart(req.session.name))
 })
 
 router.get('/buy', async (req, res) => {
   if (!req.session.name)
     res.redirect("/login.html")
   try {
-    await cartService.buy(req.session.name)
+    await cartController.buy(req.session.name)
     res.sendStatus(200)
   }
   catch (err) {
@@ -30,7 +27,7 @@ router.post('/add', async (req, res) => {
   if (!req.session.name)
     res.redirect("/login.html")
   try {
-    res.json(await cartService.add(req.session.name, req.body.product));
+    res.json(await cartController.add(req.session.name, req.body.product));
   }
   catch (err) {
     console.log(err)

@@ -1,8 +1,8 @@
 import MongoDbContainer from "../containers/MongoDbContainer.js";
 
 class UserDaoMongodb extends MongoDbContainer {
-    constructor() {
-        super('User')
+    constructor({db}) {
+        super('User', db)
     }
     async disconnect(){
 

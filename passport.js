@@ -1,7 +1,8 @@
 import passport from 'passport';
 import Strategy from 'passport-local';
-import UserService from './services/usersService';
-const userService = new UserService()
+import dependencies from './dependencies.js';
+const container = dependencies();
+const userService = container.resolve("userService");
 
 
 passport.use('registration', new Strategy({passReqToCallback: true}, async (req, username, password, callback) => {

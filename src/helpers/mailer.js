@@ -34,7 +34,7 @@ export const inicialMailer = ({username, password, direction, name, age, phone})
     })
         
 }
-export const mailer = ({template, context, subject , to}) => {
+export const mailer = (template, context, subject , to) => {
     const mailOptios = {
         from: sender,
         to: to,

@@ -1,8 +1,8 @@
 import MongoDbContainer from "../containers/MongoDbContainer.js";
 
 class ProductDaoMongodb extends MongoDbContainer {
-    constructor() {
-        super('Product')
+    constructor({db}) {
+        super('Product', db)
     }
     async disconnect(){
 

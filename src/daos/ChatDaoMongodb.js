@@ -1,11 +1,11 @@
-import MongoDbContainer from "../containers/MongoDbContainer.js";
+// import MongoDbContainer from "../containers/MongoDbContainer.js";
 
-class ChatDaoMongodb extends MongoDbContainer {
-    constructor() {
-        super('Chat')
-    }
-    async disconnect(){
+// class ChatDaoMongodb extends MongoDbContainer {
+//     constructor({db}) {
+//         super('Chat', db)
+//     }
+//     async disconnect(){
 
-    }
-}
-export default ChatDaoMongodb;
+//     }
+// }
+// export default ChatDaoMongodb;

@@ -1,17 +1,15 @@
-import dbConnections from '../../config.js'
 import { MongoClient, ObjectId } from 'mongodb'
-const mongo = new MongoClient(dbConnections.mongoDb);
-
 
 class MongoDbContainer {
-    constructor(table) {
+    constructor(table, db) {
         this.table = table;
+        this.db = new MongoClient(db);
     }
 
     async save(object) {
         try {
-            await mongo.connect();
-            await mongo.db("comercio").collection(this.table).insertOne(object)
+            await this.db.connect();
+            await this.db.db("comercio").collection(this.table).insertOne(object)
         }
         catch (err) {
             throw new Error("Error saving in database")
@@ -22,10 +20,10 @@ class MongoDbContainer {
     async getByparameter(value, name = 'id') {
         let object = {}
         try {
-            await mongo.connect();
+            await this.db.connect();
             let filter = {}
             filter[`${name}`] = name !== "_id" ? value : ObjectId(value);
-            object = await mongo.db("comercio").collection(this.table).find(filter).toArray()
+            object = await this.db.db("comercio").collection(this.table).find(filter).toArray()
         }
         catch (err) {
             throw new Error("Error getting the data")
@@ -37,8 +35,8 @@ class MongoDbContainer {
     async getAll() {
         let data = []
         try {
-            await mongo.connect();
-            data = await mongo.db("comercio").collection(this.table).find({}).toArray()
+            await this.db.connect();
+            data = await this.db.db("comercio").collection(this.table).find({}).toArray()
         }
         catch (err) {
             throw new Error("Error getting the data")
@@ -48,8 +46,8 @@ class MongoDbContainer {
     }
     async deleteById(id) {
         try {
-            await mongo.connect();
-            await mongo.db("comercio").collection(this.table).deleteOne({ _id: id })
+            await this.db.connect();
+            await this.db.db("comercio").collection(this.table).deleteOne({ _id: id })
         }
         catch (err) {
             throw new Error("Error deleting the data")
@@ -57,8 +55,8 @@ class MongoDbContainer {
     }
     async update(object) {
         try {
-            await mongo.connect();
-            return await mongo.db("comercio").collection(this.table).updateOne({ "_id": ObjectId(object._id) }, { "$set": { ...object } })
+            await this.db.connect();
+            return await this.db.db("comercio").collection(this.table).updateOne({ "_id": ObjectId(object._id) }, { "$set": { ...object } })
         }
         catch (err) {
             throw new Error("Error updating the data")

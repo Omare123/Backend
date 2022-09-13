@@ -1,9 +1,6 @@
-import ProductDao from '../src/daos/ProductDaoMongodb.js'
-
-const productDao = new ProductDao();
-
 class ProductService {
-    constructor() {
+    constructor({productDao}) {
+        this.productDao = productDao
     }
 
     getAll = async () => {
