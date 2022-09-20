@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "node benchmark.js",
+    "test:server": "mocha tests/product.test.js",
     "dev": "nodemon server.js"
   },
   "repository": {
@@ -36,6 +37,7 @@
     "express-session": "^1.17.3",
     "knex": "^2.1.0",
     "minimist": "^1.2.6",
+    "mocha": "^10.0.0",
     "mongodb": "^4.7.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
@@ -54,5 +56,10 @@
     "uuid": "^8.3.2"
   },
   "keywords": [],
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/chai": "^4.3.3",
+    "chai": "^4.3.6",
+    "supertest": "^6.2.4"
+  }
 }

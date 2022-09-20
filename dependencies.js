@@ -12,27 +12,22 @@ import ProductController from './src/controllers/productController.js'
 import { mailer } from './src/helpers/mailer.js'
 import {whatsapper} from './src/helpers/whatsapper.js'
 
-const setup = () => {
-    const container = createContainer({
-        injectionMode: InjectionMode.PROXY
-    })
-    return container.register({    
-        userController: asClass(UserController),
-        userDao: asClass(UserDaoMongodb),
-        userService: asClass(UserService),
-        cartController: asClass(CartController),
-        cartDao: asClass(CartDaoMongodb),
-        cartService: asClass(CartService),
-        productController: asClass(ProductController),
-        productDao: asClass(ProductDaoMongodb),
-        productService: asClass(ProductService),
-        db: asValue(process.env.DB_CONNECTION),
-        mailer: asFunction(mailer),
-        whatsapper: asFunction(whatsapper)
-    })
-}
+export const container = createContainer({
+    injectionMode: InjectionMode.PROXY
+})
 
-
-
-export default setup
+container.register({    
+    userController: asClass(UserController),
+    userDao: asClass(UserDaoMongodb),
+    userService: asClass(UserService),
+    cartController: asClass(CartController),
+    cartDao: asClass(CartDaoMongodb),
+    cartService: asClass(CartService),
+    productController: asClass(ProductController),
+    productDao: asClass(ProductDaoMongodb),
+    productService: asClass(ProductService),
+    db: asValue(process.env.DB_CONNECTION),
+    mailer: asFunction(mailer),
+    whatsapper: asFunction(whatsapper)
+})
 

@@ -1,8 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import { upload } from '../helpers/uploader.js';
-import dependencies from '../../dependencies.js'
-const container = dependencies();
+import {container} from '../../dependencies.js'
 const productController = container.resolve('productController');
 
 router.get('/:id?', async (req, res) => {

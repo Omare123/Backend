@@ -17,7 +17,7 @@ class MongoDbContainer {
 
         return object;
     }
-    async getByparameter(value, name = 'id') {
+    async getByparameter(value, name = '_id') {
         let object = {}
         try {
             await this.db.connect();
@@ -47,7 +47,7 @@ class MongoDbContainer {
     async deleteById(id) {
         try {
             await this.db.connect();
-            await this.db.db("comercio").collection(this.table).deleteOne({ _id: id })
+            return await this.db.db("comercio").collection(this.table).deleteOne({ _id: ObjectId(id) });
         }
         catch (err) {
             throw new Error("Error deleting the data")

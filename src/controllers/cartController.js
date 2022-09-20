@@ -6,12 +6,12 @@ class CartController {
   getCart = async (username) => {
     return await this.cartService.getCart(username)
   }
-  buy = async () => {
-    await this.cartService.buy(req.session.name)
+  buy = async (username) => {
+    await this.cartService.buy(username)
   }
 
   add = async (username, product) => {
-    await cartService.add(username, product)
+    await this.cartService.add(username, product)
   }
 }
 

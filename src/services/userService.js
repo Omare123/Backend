@@ -16,10 +16,11 @@ class UserService {
         return user
     }
 
-    register = async () => {
-        const user = await this.userDao.getByparameter(user.username, 'username');
-        if (user) throw new Error("Ya existe un usuario con ese nombre")
-        const hasedPass = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+    register = async (user) => {
+        console.log(this.userDao)
+        const RegisterdUser = await this.userDao.getByparameter(user.username, 'username');
+        if (RegisterdUser) throw new Error("Ya existe un usuario con ese nombre")
+        const hasedPass = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
         const createdUser = { ...user, password: hasedPass };
         inicialMailer(user)
         return await this.userDao.save(createdUser);

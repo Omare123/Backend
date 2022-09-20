@@ -2,9 +2,10 @@ import { mailer } from '../helpers/mailer.js';
 import { whatsapper } from '../helpers/whatsapper.js';
 
 class CartService {
-  constructor({ cartDao, productDao }) {
+  constructor({ cartDao, productDao, userDao }) {
     this.cartDao = cartDao;
     this.productDao = productDao;
+    this.userDao = userDao;
   }
 
   getCart = async (username) => {
@@ -17,7 +18,7 @@ class CartService {
       product: product,
       count: 1
     }
-    cart = {
+    const cart = {
       username: username,
       items: [addedProduct]
     }
@@ -45,9 +46,9 @@ class CartService {
 
   buy = async (username) => {
     const cart = await this.cartDao.getByparameter(username, "username");
-    const user = await userDao.getByparameter(username, "username");
+    const user = await this.userDao.getByparameter(username, "username");
     whatsapper({ body: `Hola ${user.name}! tu pedido fue recibido y lo estamos procesando`, toNumber: user.phone })
-    mailer({ template: "buyMail", context: cart, subject: `Nuevo pedido de ${user.name}`, to: user.username })
+    mailer("buyMail",cart,`Nuevo pedido de ${user.name}`,user.username )
     await this.cartDao.deleteById(cart._id)
   }
 }

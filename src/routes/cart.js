@@ -1,7 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import dependencies from '../../dependencies.js'
-const container = dependencies();
+import {container} from '../../dependencies.js'
 const cartController = container.resolve('cartController');
 
 router.get('/', async (req, res) => {

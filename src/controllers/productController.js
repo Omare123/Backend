@@ -1,6 +1,6 @@
 
 export default class ProductController {
-  constructor(productService){
+  constructor({productService}){
     this.productService = productService;
   }
   getProduct = async (id) => {

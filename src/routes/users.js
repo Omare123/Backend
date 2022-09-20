@@ -2,8 +2,7 @@ import express from 'express';
 const router = express.Router();
 import passport from '../../passport.js';
 import { upload } from '../helpers/uploader.js';
-import dependencies from '../../dependencies.js'
-const container = dependencies();
+import {container} from '../../dependencies.js';
 const userController = container.resolve('userController')
 
 const authentication = (req, res, next) => {

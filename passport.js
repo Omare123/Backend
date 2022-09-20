@@ -1,7 +1,6 @@
 import passport from 'passport';
 import Strategy from 'passport-local';
-import dependencies from './dependencies.js';
-const container = dependencies();
+import {container} from './dependencies.js';
 const userService = container.resolve("userService");
 
 
@@ -34,7 +33,7 @@ passport.serializeUser((usuario, callback) => {
 
 passport.deserializeUser(async (username, callback) => {
     if(username){
-        const user = await userService.getByparameter(username, 'username');
+        const user = await userService.getUser(username);
         callback(null, user);
     }
 });

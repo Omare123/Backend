@@ -4,21 +4,21 @@ class ProductService {
     }
 
     getAll = async () => {
-        return await productDao.getAll();
+        return await this.productDao.getAll();
     }
 
     getProduct = async (id) => {
-        return await productDao.getByparameter(id)
+        return await this.productDao.getByparameter(id)
     }
 
     newProduct = async (product) => {
-        return await productDao.save(product)
+        return await this.productDao.save(product)
     }
     updateProduct = async (product) => {
-        return await productDao.update(product)
+        return await this.productDao.update(product)
     }
     deleteProduct = async (id) => {
-        return await productDao.deleteById(id)
+        return await this.productDao.deleteById(id)
     }
 }
 
