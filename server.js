@@ -4,13 +4,13 @@ import express from 'express';
 import products from './src/routes/products.js'
 import cart from './src/routes/cart.js'
 import users from './src/routes/users.js'
+import graphql from './src/routes/graphql.js'
 import { engine } from 'express-handlebars';
 import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo'
 import session from 'express-session';
 import passport from './passport.js';
 import parseArgs from 'minimist';
-import cluster from 'cluster';
 import os from 'os'
 import compression from 'compression';
 import morgan from 'morgan';
@@ -23,7 +23,6 @@ const __dirname = path.dirname(__filename);
 const { mode } = parseArgs(process.argv, { default: { mode: "fork" } });
 const port = parseInt(process.env.PORT) || 8080
 const processId = process.pid;
-const numeroCpus = os.cpus().length;
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs.log'), { flags: 'a' })
 const app = express();
 app.use(morgan('dev', { stream: accessLogStream }))
@@ -48,7 +47,7 @@ app.set('views', './public');
 app.use('/api/products', products)
 app.use('/api/cart', cart)
 app.use('/api/users', users)
-
+app.use(graphql)
 const httpServer = new HttpServer(app);
 app.use(express.static('public'));
 app.engine(

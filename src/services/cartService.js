@@ -27,9 +27,9 @@ class CartService {
 
   add = async (username, productId) => {
     let cart = await this.cartDao.getByparameter(username, "username")
-    if (!cart) {
+    if (!cart) 
       return await this.newCart(username, productId)
-    }
+    
     const index = cart.items.findIndex(item => item.product._id == productId)
     if (index !== -1)
       cart.items[index].count += 1;

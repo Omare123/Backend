@@ -1,0 +1,50 @@
+type Product {
+    name: String,
+    price: String,
+    image: String
+}
+
+input ProductInput {
+    name: String,
+    price: String,
+    image: String
+}
+
+input AddedProduct {
+    product: ProductInput,
+    count: String
+}
+
+type Cart {
+    username: String,
+    items: AddedProduct,
+}
+
+input CartInput {
+    username: String,
+    items: AddedProduct,
+}
+
+input User {
+    username:String
+    password: String
+    name: String
+    direction: String
+    age: String
+    phone: String
+    photo: String
+}
+
+type Query {
+    getUser(id: String): User,
+    getAll: [ProductInput],
+    getProduct(id: String): ProductInput,
+    getCart(username: String): CartInput
+}
+
+type Mutation {
+    newProduct(product: Product): ProductInput,
+    updateProduct(product: Product): ProductInput,
+    add(username: String, productId: String): CartInput,
+    buy(username: String): CartInput,
+}
