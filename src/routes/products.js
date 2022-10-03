@@ -1,22 +1,24 @@
-import express from 'express';
-const router = express.Router();
+import router from 'koa-router' 
 import { upload } from '../helpers/uploader.js';
 import {container} from '../../dependencies.js'
 const productController = container.resolve('productController');
 
-router.get('/:id?', async (req, res) => {
-  res.json(await productController.getProduct(req.params.id))
+
+const productRouter = router({prefix: '/api/product'})
+
+productRouter.get('/:id?', async ({request, response}) => {
+  response.json(await productController.getProduct(request.params.id))
 })
 
-router.post('/', upload.single("uploaded_file"), async (req, res) => {
-  res.json(await productController.newProduct(req.body, req.file.filename))
+productRouter.post('/', upload.single("uploaded_file"), async ({request, response}) => {
+  response.json(await productController.newProduct(request.body, request.file.filename))
 })
 
-router.put('/:id', async (req, res) => {
-  res.json(await productController.updateProduct(req.body))
+productRouter.put('/:id', async ({request, response}) => {
+  response.json(await productController.updateProduct(request.body))
 })
 
-router.delete('/:id', async (req, res) => {
-  res.json(await productController.deleteProduct(req.params.id))
+productRouter.delete('/:id', async ({request, response}) => {
+  response.json(await productController.deleteProduct(request.params.id))
 })
-export default router;
+export default productRouter;

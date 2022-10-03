@@ -1,20 +1,22 @@
-import express from 'express';
-const router = express.Router();
+import router from 'koa-router' 
 import {container} from '../../dependencies.js'
 const cartController = container.resolve('cartController');
 
-router.get('/', async (req, res) => {
-  if (!req.session.name)
-    res.redirect("/login.html")
-  res.json(await cartController.getCart(req.session.name))
+
+const cartRouter = router({prefix: '/api/cart'})
+
+cartRouter.get('/', async (request, response) => {
+  if (!request.session.name)
+    response.redirect("/login.html")
+  response.json(await cartController.getCart(request.session.name))
 })
 
-router.get('/buy', async (req, res) => {
-  if (!req.session.name)
-    res.redirect("/login.html")
+cartRouter.get('/buy', async (request, response) => {
+  if (!request.session.name)
+    response.redirect("/login.html")
   try {
-    await cartController.buy(req.session.name)
-    res.sendStatus(200)
+    await cartController.buy(request.session.name)
+    response.sendStatus(200)
   }
   catch (err) {
     console.log(err)
@@ -22,11 +24,11 @@ router.get('/buy', async (req, res) => {
 
 })
 
-router.post('/add', async (req, res) => {
-  if (!req.session.name)
-    res.redirect("/login.html")
+cartRouter.post('/add', async (request, response) => {
+  if (!request.session.name)
+    response.redirect("/login.html")
   try {
-    res.json(await cartController.add(req.session.name, req.body.product));
+    response.json(await cartController.add(request.session.name, request.body.product));
   }
   catch (err) {
     console.log(err)
@@ -35,4 +37,4 @@ router.post('/add', async (req, res) => {
 })
 
 
-export default router;
+export default cartRouter;

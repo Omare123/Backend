@@ -1,41 +1,42 @@
-import express from 'express';
-const router = express.Router();
+import router from 'koa-router' 
 import passport from '../../passport.js';
 import { upload } from '../helpers/uploader.js';
 import {container} from '../../dependencies.js';
 const userController = container.resolve('userController');
 
-const authentication = (req, res, next) => {
-  if (req.session.name) return res.send({ active: true, name: req.session.name });
+const userRouter = router({prefix: '/user'})
+
+const authentication = ({request, response}, next) => {
+  if (request.session.name) return response.send({ active: true, name: request.session.name });
   next();
 }
 
-router.post('/register', upload.single("uploaded_file"), passport.authenticate('registration'), (req, res, next) => {
+userRouter.post('/api/register', upload.single("uploaded_file"), passport.authenticate('registration'), ({request, response}, next) => {
   try {
-    res.send({ active: true, name: req.body.username });
+    response.send({ active: true, name: request.body.username });
   } catch (err) {
     console.log(err);
   }
 })
 
-router.post('/login', passport.authenticate('login'), (req, res) => {
-  if (!req.session.name) {
-    req.session.name = req.body.username;
+userRouter.post('/login', passport.authenticate('login'), ({request, response}) => {
+  if (!request.session.name) {
+    request.session.name = request.body.username;
   }
-  res.send({ active: true, name: req.body.username });
+  response.send({ active: true, name: request.body.username });
 })
 
-router.get('/logout', (req, res) => {
-  const response = req.session.name;
-  req.session.destroy();
-  res.send(response)
+userRouter.get('/logout', ({request, response}) => {
+  const res = request.session.name;
+  request.session.destroy();
+  response.send(res)
 });
 
-router.get('/loggedin', authentication, (req, res) => {
-  return res.send({ active: false });
+userRouter.get('/loggedin', authentication, ({request, response}) => {
+  return response.send({ active: false });
 });
 
-router.get('/:username?', (req, res) => {
-    res.json(userController.getUser(req.query.username))
+userRouter.get('/:username?', ({request, response}) => {
+    response.json(userController.getUser(request.query.username))
 })
-export default router;
+export default userRouter;

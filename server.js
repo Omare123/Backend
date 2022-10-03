@@ -1,17 +1,17 @@
 import 'dotenv/config'
 import { Server as HttpServer } from 'http';
-import express from 'express';
+import serve from "koa-static";
+import Koa from 'koa'
+import json from 'koa-json';
 import products from './src/routes/products.js'
 import cart from './src/routes/cart.js'
 import users from './src/routes/users.js'
-import graphql from './src/routes/graphql.js'
 import { engine } from 'express-handlebars';
 import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo'
 import session from 'express-session';
 import passport from './passport.js';
 import parseArgs from 'minimist';
-import os from 'os'
 import compression from 'compression';
 import morgan from 'morgan';
 import fs from 'fs';
@@ -24,10 +24,9 @@ const { mode } = parseArgs(process.argv, { default: { mode: "fork" } });
 const port = parseInt(process.env.PORT) || 8080
 const processId = process.pid;
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs.log'), { flags: 'a' })
-const app = express();
+const app = new Koa();
 app.use(morgan('dev', { stream: accessLogStream }))
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
 app.use(cookieParser());
 app.use(compression());
 const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true }
@@ -42,20 +41,12 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.set('view engine', 'hbs');
-app.set('views', './public');
-app.use('/api/products', products)
-app.use('/api/cart', cart)
-app.use('/api/users', users)
-app.use(graphql)
+app.use(products.routes())
+app.use(cart.routes())
+app.use(users.routes())
 const httpServer = new HttpServer(app);
-app.use(express.static('public'));
-app.engine(
-    'hbs',
-    engine({
-        extname: '.hbs'
-    })
-)
+app.use(serve(__dirname + "/public"));
+
 
 httpServer.listen(port, () => {
     console.log(`Listening on port ${port}! and process Id: ${processId}`)
