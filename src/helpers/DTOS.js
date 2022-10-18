@@ -1,8 +1,8 @@
 export const productDTO = (product) => {
     return {
-        id: product._id,
         price: product.price,
-        name: product.name
+        name: product.name,
+        image: product.image
     }
 }
 

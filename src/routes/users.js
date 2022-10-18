@@ -1,9 +1,10 @@
 import express from 'express';
 const router = express.Router();
 import passport from '../../passport.js';
-import { upload } from '../helpers/uploader.js';
+// import { upload } from '../helpers/uploader.js';
 import {container} from '../../dependencies.js';
 const userController = container.resolve('userController');
+const upload = container.resolve("upload");
 
 const authentication = (req, res, next) => {
   if (req.session.name) return res.send({ active: true, name: req.session.name });

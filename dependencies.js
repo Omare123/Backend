@@ -8,6 +8,7 @@ import CartController from './src/controllers/cartController.js'
 import ProductDaoMongodb from './src/daos/ProductDaoMongodb.js'
 import ProductService from './src/services/productService.js'
 import ProductController from './src/controllers/productController.js'
+import { upload } from './src/helpers/uploader.js'
 import { mailer } from './src/helpers/mailer.js'
 import {whatsapper} from './src/helpers/whatsapper.js'
 import { logWarn, logError, logInConsole } from './src/helpers/logger.js'
@@ -25,6 +26,7 @@ container.register({
     productController: asClass(ProductController),
     productDao: asClass(ProductDaoMongodb),
     productService: asClass(ProductService),
-    db: asValue(process.env.DB_CONNECTION)
+    db: asValue(process.env.DB_CONNECTION),
+    upload: asValue(upload)
 })
 
