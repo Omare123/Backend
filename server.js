@@ -4,7 +4,7 @@ import express from 'express';
 import products from './src/routes/products.js'
 import cart from './src/routes/cart.js'
 import users from './src/routes/users.js'
-import graphql from './src/routes/graphql.js'
+// import graphql from './src/routes/graphql.js'
 import { engine } from 'express-handlebars';
 import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo'
@@ -54,7 +54,7 @@ app.use('/api/cart', cart)
 app.use('/api/users', users)
 // app.use(logWarn);
 // app.use(logError);
-app.use(graphql)
+// app.use(graphql)
 const httpServer = new HttpServer(app);
 app.use(express.static('public'));
 app.engine(
