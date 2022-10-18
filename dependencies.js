@@ -25,11 +25,6 @@ container.register({
     productController: asClass(ProductController),
     productDao: asClass(ProductDaoMongodb),
     productService: asClass(ProductService),
-    db: asValue(process.env.DB_CONNECTION),
-    mailer: asFunction(mailer),
-    whatsapper: asFunction(whatsapper),
-    logWarn: asFunction(logWarn),
-    logError: asFunction(logError),
-    logInConsole: asFunction(logInConsole)
+    db: asValue(process.env.DB_CONNECTION)
 })
 
