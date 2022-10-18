@@ -17,6 +17,10 @@ import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {container} from './dependencies.js'
+// const logInConsole = container.resolve('logInConsole');
+// const logWarn = container.resolve('logWarn');
+// const logError = container.resolve('logError');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,6 +29,7 @@ const port = parseInt(process.env.PORT) || 8080
 const processId = process.pid;
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs.log'), { flags: 'a' })
 const app = express();
+// app.use(logInConsole)
 app.use(morgan('dev', { stream: accessLogStream }))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -47,6 +52,8 @@ app.set('views', './public');
 app.use('/api/products', products)
 app.use('/api/cart', cart)
 app.use('/api/users', users)
+// app.use(logWarn);
+// app.use(logError);
 app.use(graphql)
 const httpServer = new HttpServer(app);
 app.use(express.static('public'));

@@ -1,3 +1,5 @@
+import { productDTO } from '../helpers/DTOS.js'
+
 class ProductService {
     constructor({productDao}) {
         this.productDao = productDao
@@ -12,10 +14,12 @@ class ProductService {
     }
 
     newProduct = async (product) => {
-        return await this.productDao.save(product)
+        const newProduct = productDTO(product)
+        return await this.productDao.save(newProduct)
     }
     updateProduct = async (product) => {
-        return await this.productDao.update(product)
+        const newProduct = productDTO(product)
+        return await this.productDao.update(newProduct)
     }
     deleteProduct = async (id) => {
         return await this.productDao.deleteById(id)

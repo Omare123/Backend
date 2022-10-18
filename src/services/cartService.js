@@ -1,5 +1,6 @@
 import { mailer } from '../helpers/mailer.js';
 import { whatsapper } from '../helpers/whatsapper.js';
+import { cartDTO, addedProductDTO } from '../helpers/DTOS.js'
 
 class CartService {
   constructor({ cartDao, productDao, userDao }) {
@@ -14,14 +15,8 @@ class CartService {
 
   newCart = async (username, productId) => {
     const product = await this.productDao.getByparameter(productId, "_id");
-    const addedProduct = {
-      product: product,
-      count: 1
-    }
-    const cart = {
-      username: username,
-      items: [addedProduct]
-    }
+    const addedProduct = addedProductDTO(product, 1)
+    const cart = cartDTO(username, [...addedProduct])
     return await this.cartDao.save(cart)
   }
 
@@ -35,10 +30,7 @@ class CartService {
       cart.items[index].count += 1;
     else {
       const product = await this.productDao.getByparameter(productId, "_id");
-      const addedProduct = {
-        product: product,
-        count: 1
-      }
+      const addedProduct = addedProductDTO(product, 1)
       cart.items.push({ ...addedProduct })
     }
     return await this.cartDao.update(cart);

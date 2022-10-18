@@ -8,10 +8,9 @@ import CartController from './src/controllers/cartController.js'
 import ProductDaoMongodb from './src/daos/ProductDaoMongodb.js'
 import ProductService from './src/services/productService.js'
 import ProductController from './src/controllers/productController.js'
-// import db from './config.js'
 import { mailer } from './src/helpers/mailer.js'
 import {whatsapper} from './src/helpers/whatsapper.js'
-
+import { logWarn, logError, logInConsole } from './src/helpers/logger.js'
 export const container = createContainer({
     injectionMode: InjectionMode.PROXY
 })
@@ -28,6 +27,9 @@ container.register({
     productService: asClass(ProductService),
     db: asValue(process.env.DB_CONNECTION),
     mailer: asFunction(mailer),
-    whatsapper: asFunction(whatsapper)
+    whatsapper: asFunction(whatsapper),
+    logWarn: asFunction(logWarn),
+    logError: asFunction(logError),
+    logInConsole: asFunction(logInConsole)
 })
 

@@ -7,7 +7,7 @@ const getAllProducts = async () => {
     let template = await fetch('/addProducts.hbs').then(response => response.text());
     const tmplt = Handlebars.compile(template)
     const html = allProducts.map((product) => {
-        product.image = baseURL + "/uploads/" + product.image;
+        product.image = "https://coder-house-omar.herokuapp.com/uploads/" + product.image;
         ids = [...ids, product._id];
         return tmplt(product);
     }).join(' ')
@@ -32,7 +32,7 @@ const loggedin = async () => {
                 const html = tmplt({ name: user.name })
                 document.getElementById('welcome').innerHTML = html;
             })
-            document.getElementById("profilePic").innerHTML = `<img src="${baseURL + "/uploads/" + user.photo}" class="rounded-circle ml-1" alt="profile" width="30" height="30">`
+            document.getElementById("profilePic").innerHTML = `<img src="${"https://coder-house-omar.herokuapp.com/uploads/" + user.photo}" class="rounded-circle ml-1" alt="profile" width="30" height="30">`
         }
         else {
             window.location.href = "/login.html"

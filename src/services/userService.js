@@ -1,5 +1,6 @@
 import { inicialMailer } from "../helpers/mailer.js"
 import bcrypt from 'bcrypt';
+import { userDTO } from '../helpers/DTOS.js'
 
 class UserService {
     constructor({userDao}) {
@@ -17,11 +18,10 @@ class UserService {
     }
 
     register = async (user) => {
-        console.log(this.userDao)
         const RegisterdUser = await this.userDao.getByparameter(user.username, 'username');
         if (RegisterdUser) throw new Error("Ya existe un usuario con ese nombre")
-        const hasedPass = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
-        const createdUser = { ...user, password: hasedPass };
+        const hashedPass = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
+        const createdUser = userDTO({ ...user, password: hashedPass });
         inicialMailer(user)
         return await this.userDao.save(createdUser);
     }
