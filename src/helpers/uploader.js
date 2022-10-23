@@ -8,6 +8,7 @@ const storage = multer.diskStorage({
       if(!file)
           cb("error")
       if(process.env.PROD === "true"){
+        console.log(file)
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
       }
@@ -18,7 +19,8 @@ const storage = multer.diskStorage({
   })
 
 const sendToServer = async(file) => {
-  return await axios.post(`${process.env.BASE_URL}api/upload`, file)
+  console.log(`${process.env.BASE_URL}api/upload/`)
+  return await axios.post(`${process.env.BASE_URL}api/upload/`, {"uploaded_file": file})
 }
 export const upload = multer({
     storage: storage
