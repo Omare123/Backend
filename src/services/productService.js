@@ -14,12 +14,15 @@ class ProductService {
     }
 
     newProduct = async (product) => {
+        product.active = true;
         const newProduct = productDTO(product)
         return await this.productDao.save(newProduct)
     }
     updateProduct = async (product) => {
         const newProduct = productDTO(product)
-        return await this.productDao.update(newProduct)
+        const oldProduct = productDTO(await this.productDao.getByparameter(product._id))
+        const updatedProduct = {...oldProduct, name: newProduct.name, price: newProduct.price}
+        return await this.productDao.update(updatedProduct)
     }
     deleteProduct = async (id) => {
         return await this.productDao.deleteById(id)

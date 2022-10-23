@@ -17,7 +17,7 @@ router.get('/buy', async (req, res) => {
     res.sendStatus(200)
   }
   catch (err) {
-    console.log(err)
+    res.sendStatus(400)
   }
 
 })
@@ -29,7 +29,7 @@ router.post('/add', async (req, res) => {
     res.json(await cartController.add(req.session.name, req.body.product));
   }
   catch (err) {
-    console.log(err)
+    res.redirect("/index.html")
   }
 
 })

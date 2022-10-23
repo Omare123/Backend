@@ -9,7 +9,7 @@ const getAllProducts = async () => {
         let template = await fetch('/cartProduct.hbs').then(response => response.text());
         const tmplt = Handlebars.compile(template)
         const html = cart.items.map((item) => {
-            item.product.image = baseURL + "/uploads/" + item.product.image;
+            item.product.image = "https://coder-house-omar.herokuapp.com/uploads/" + item.product.image;
             ids = [...ids, item.product._id];
             return tmplt(item);
         }).join(' ')

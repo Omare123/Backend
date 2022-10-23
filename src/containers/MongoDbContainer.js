@@ -23,10 +23,11 @@ class MongoDbContainer {
             await this.db.connect();
             let filter = {}
             filter[`${name}`] = name !== "_id" ? value : ObjectId(value);
+            filter["active"] = true;
             object = await this.db.db("comercio").collection(this.table).find(filter).toArray()
         }
         catch (err) {
-            throw new Error("Error getting the data")
+            return new Error("Error getting the data")
         }
 
         return object[0];
@@ -36,7 +37,9 @@ class MongoDbContainer {
         let data = []
         try {
             await this.db.connect();
-            data = await this.db.db("comercio").collection(this.table).find({}).toArray()
+            let filter = {}
+            filter["active"] = true;
+            data = await this.db.db("comercio").collection(this.table).find(filter).toArray()
         }
         catch (err) {
             throw new Error("Error getting the data")
@@ -47,13 +50,14 @@ class MongoDbContainer {
     async deleteById(id) {
         try {
             await this.db.connect();
-            return await this.db.db("comercio").collection(this.table).deleteOne({ _id: ObjectId(id) });
+            return await this.db.db("comercio").collection(this.table).updateOne({ "_id": ObjectId(id) }, { "$set": { active: false } })
         }
         catch (err) {
             throw new Error("Error deleting the data")
         }
     }
     async update(object) {
+        console.log("mongo", object)
         try {
             await this.db.connect();
             return await this.db.db("comercio").collection(this.table).updateOne({ "_id": ObjectId(object._id) }, { "$set": { ...object } })

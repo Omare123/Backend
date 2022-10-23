@@ -1,8 +1,10 @@
 export const productDTO = (product) => {
     return {
+        _id: product._id,
         price: product.price,
         name: product.name,
-        image: product.image
+        image: product.image,
+        active: product.active
     }
 }
 
@@ -10,23 +12,25 @@ export const userDTO = (user) => {
     return {
         username: user.username,
         name: user.name,
-        passwod: passwod,
+        password: user.password,
         direction: user.direction,
         age: user.age,
         phone: user.phone,
-        photo: user.photo
+        photo: user.photo,
+        active: user.active
     }
 }
 
-export const cartDTO = (username, items) => {
+export const cartDTO = (username, items, active) => {
     return {
         username: username,
+        active: active,
         items: [...items]
     }
 }
 export const  addedProductDTO = (product, count) => {
     return {
-        product: product,
+        product: {...product},
         count: count
     }
 }

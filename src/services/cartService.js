@@ -15,25 +15,34 @@ class CartService {
 
   newCart = async (username, productId) => {
     const product = await this.productDao.getByparameter(productId, "_id");
+    if(!product)
+      throw Error("Not found")
     const addedProduct = addedProductDTO(product, 1)
-    const cart = cartDTO(username, [...addedProduct])
+    console.log(product, addedProduct)
+    const cart = cartDTO(username, [addedProduct], true)
     return await this.cartDao.save(cart)
   }
 
   add = async (username, productId) => {
-    let cart = await this.cartDao.getByparameter(username, "username")
-    if (!cart) 
-      return await this.newCart(username, productId)
-    
-    const index = cart.items.findIndex(item => item.product._id == productId)
-    if (index !== -1)
-      cart.items[index].count += 1;
-    else {
-      const product = await this.productDao.getByparameter(productId, "_id");
-      const addedProduct = addedProductDTO(product, 1)
-      cart.items.push({ ...addedProduct })
+    try{
+      let cart = await this.cartDao.getByparameter(username, "username")
+      if (!cart) 
+        return await this.newCart(username, productId)
+      
+      const index = cart.items.findIndex(item => item.product._id == productId)
+      if (index !== -1)
+        cart.items[index].count += 1;
+      else {
+        const product = await this.productDao.getByparameter(productId, "_id");
+        const addedProduct = addedProductDTO(product, 1)
+        cart.items.push({ ...addedProduct })
+      }
+      return await this.cartDao.update(cart);
     }
-    return await this.cartDao.update(cart);
+    catch(error)
+    {
+      return error
+    }
   }
 
   buy = async (username) => {

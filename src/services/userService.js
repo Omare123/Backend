@@ -21,14 +21,14 @@ class UserService {
         const RegisterdUser = await this.userDao.getByparameter(user.username, 'username');
         if (RegisterdUser) throw new Error("Ya existe un usuario con ese nombre")
         const hashedPass = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
-        const createdUser = userDTO({ ...user, password: hashedPass });
+        const createdUser = userDTO({ ...user, password: hashedPass, active: true });
         inicialMailer(user)
         return await this.userDao.save(createdUser);
     }
 
     login = async (username, password) => {
         const user = await this.userDao.getByparameter(username, 'username');
-        if (!user || !bcrypt.compareSync(password, user.password)) throw new Error('Usuario no existente o contraseña incorrecta');
+        if (!user || !user.active || !bcrypt.compareSync(password, user.password)) throw new Error('Usuario no existente o contraseña incorrecta');
         else return user;
     }
 }
