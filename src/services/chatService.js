@@ -1,8 +1,6 @@
-import { inicialMailer } from "../helpers/mailer.js"
-import bcrypt from 'bcrypt';
 import { messageDTO } from '../helpers/DTOS.js'
 
-class UserService {
+class ChatService {
     constructor({chatDao}) {
         this.chatDao = chatDao;
     }
@@ -23,4 +21,4 @@ class UserService {
     }
 
 }
-export default UserService;
+export default ChatService;
