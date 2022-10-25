@@ -17,8 +17,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { Server as SocketServer } from 'socket.io'
-import { container } from './dependencies.js'
-const chatService = container.resolve('chatService')
+// import { container } from './dependencies.js'
+// const chatService = container.resolve('chatService');
 
 const port = parseInt(process.env.PORT) || 8080;
 const app = express();
