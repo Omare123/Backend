@@ -52,7 +52,6 @@ socketServer.on('connection', (socket) => {
         socket.emit('messages', messages);
     });
     socket.on('new_message', async (newMessage) => {
-        console.log(newMessage)
         await chatService.save(newMessage);
         socketServer.sockets.emit('message', newMessage);
     })
