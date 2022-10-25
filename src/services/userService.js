@@ -22,7 +22,7 @@ class UserService {
         if (RegisterdUser) throw new Error("Ya existe un usuario con ese nombre")
         const hashedPass = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
         const createdUser = userDTO({ ...user, password: hashedPass, active: true });
-        inicialMailer(user)
+        // inicialMailer(user)
         return await this.userDao.save(createdUser);
     }
 

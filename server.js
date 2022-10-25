@@ -16,16 +16,12 @@ import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import {container} from './dependencies.js'
+import { Server as SocketServer } from 'socket.io'
+import { container } from './dependencies.js'
+const chatService = container.resolve('chatService')
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const { mode } = parseArgs(process.argv, { default: { mode: "fork" } });
-const port = parseInt(process.env.PORT) || 8080
-const processId = process.pid;
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs.log'), { flags: 'a' })
+const port = parseInt(process.env.PORT) || 8080;
 const app = express();
-app.use(morgan('dev', { stream: accessLogStream }))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -49,6 +45,18 @@ app.use('/api/upload', upload)
 app.use('/api/cart', cart)
 app.use('/api/users', users)
 const httpServer = new HttpServer(app);
+const socketServer = new SocketServer(httpServer);
+socketServer.on('connection', (socket) => {
+    //is this save??
+    chatService.getAll().then(messages => {
+        socket.emit('messages', messages);
+    });
+    socket.on('new_message', async (newMessage) => {
+        console.log(newMessage)
+        await chatService.save(newMessage);
+        socketServer.sockets.emit('message', newMessage);
+    })
+});
 app.use(express.static('public'));
 app.engine(
     'hbs',
@@ -58,7 +66,7 @@ app.engine(
 )
 
 httpServer.listen(port, () => {
-    console.log(`Listening on port ${port}! and process Id: ${processId}`)
+    console.log(`Listening on port ${port}!`)
 });
 
 export default app;

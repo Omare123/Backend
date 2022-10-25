@@ -33,13 +33,11 @@ class MongoDbContainer {
         return object[0];
 
     }
-    async getAll() {
+    async getAll(filter = {}) {
         let data = []
         try {
             await this.db.connect();
-            let filter = {}
-            filter["active"] = true;
-            data = await this.db.db("comercio").collection(this.table).find(filter).toArray()
+            data = await this.db.db("comercio").collection(this.table).find({...filter, active: true}).toArray()
         }
         catch (err) {
             throw new Error("Error getting the data")

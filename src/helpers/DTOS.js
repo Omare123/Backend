@@ -8,6 +8,15 @@ export const productDTO = (product) => {
     }
 }
 
+export const messageDTO = ({text, username, id, active}) => {
+    return {
+        _id: id,
+        username: username,
+        text: text,
+        active: active || true
+    }
+}
+
 export const userDTO = (user) => {
     return {
         username: user.username,

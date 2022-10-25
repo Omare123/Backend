@@ -5,13 +5,13 @@ import UserService from './src/services/userService.js'
 import CartDaoMongodb from './src/daos/CartDaoMongodb.js'
 import CartService from './src/services/cartService.js'
 import CartController from './src/controllers/cartController.js'
+import ChatDaoMongodb from './src/daos/ChatDaoMongodb.js'
+import ChatService from './src/services/ChatService.js'
+import ChatController from './src/controllers/chatController.js'
 import ProductDaoMongodb from './src/daos/ProductDaoMongodb.js'
 import ProductService from './src/services/productService.js'
 import ProductController from './src/controllers/productController.js'
 import { upload } from './src/helpers/uploader.js'
-import { mailer } from './src/helpers/mailer.js'
-import {whatsapper} from './src/helpers/whatsapper.js'
-import { logWarn, logError, logInConsole } from './src/helpers/logger.js'
 export const container = createContainer({
     injectionMode: InjectionMode.PROXY
 })
@@ -23,6 +23,9 @@ container.register({
     cartController: asClass(CartController),
     cartDao: asClass(CartDaoMongodb),
     cartService: asClass(CartService),
+    chatController: asClass(ChatController),
+    chatDao: asClass(ChatDaoMongodb),
+    chatService: asClass(ChatService),
     productController: asClass(ProductController),
     productDao: asClass(ProductDaoMongodb),
     productService: asClass(ProductService),
